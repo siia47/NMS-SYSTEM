@@ -1,7 +1,0 @@
-time,source_ip,destination_ip,alert_type,severity,description
-2026-04-26 19:53:54.622301,172.20.10.4,104.29.139.164,Traffic Flood Detected,Medium,IP 172.20.10.4 sent 1000 packets within 10s.
-2026-04-26 19:54:55.023371,172.20.10.4,104.29.138.224,Traffic Flood Detected,Medium,IP 172.20.10.4 sent 1000 packets within 10s.
-2026-04-26 19:59:04.009899,172.20.10.4,104.29.138.224,Traffic Flood Detected,Medium,IP 172.20.10.4 sent 1000 packets within 10s.
-2026-04-26 19:59:14.987112,172.20.10.4,104.29.138.224,Traffic Flood Detected,Medium,IP 172.20.10.4 sent 1000 packets within 10s.
-2026-04-26 19:59:25.011129,172.20.10.4,104.29.138.224,Traffic Flood Detected,Medium,IP 172.20.10.4 sent 1065 packets within 10s.
-2026-04-26 20:08:46.582546,52.168.117.175,172.20.10.4,Port Scan Detected,High,IP 52.168.117.175 accessed 15 distinct ports within 10s.
