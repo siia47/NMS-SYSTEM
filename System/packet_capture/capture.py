@@ -5,7 +5,6 @@ import os
 import psutil
 import time
 import sys
-import os
 
 # Add parent directory to path so we can import analyzer
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -17,7 +16,6 @@ CACHE_TTL = 5 # seconds
 
 # Instantiate the global threat detector
 detector = ThreatDetector()
-CACHE_TTL = 5 # seconds
 
 def get_process_for_port(port):
     global PORT_PROCESS_CACHE, LAST_CACHE_UPDATE
@@ -47,7 +45,7 @@ def get_process_for_port(port):
 
 
 def process_packet(packet):
-    time = datetime.now()
+    time_now = datetime.now() 
     source_ip = "Unknown"
     destination_ip = "Unknown"
     length = len(packet)
@@ -92,9 +90,13 @@ def process_packet(packet):
             # Identify DNS (Port 53) or mDNS (Port 5353)
             if port in (53, 5353) or sport in (53, 5353):
                 protocol = "DNS"
+            # Identify DHCP (Ports 67 and 68) 
+            elif port in (67, 68) or sport in (67, 68):
+                protocol = "DHCP"
             else:
                 protocol = "UDP"
                 
+        # ICMP IS ALREADY IDENTIFIED HERE
         elif ICMP in packet:
             protocol = "ICMP"
             
@@ -108,7 +110,7 @@ def process_packet(packet):
         process_name = p_name
 
     packet_data = {
-        "time": time,
+        "time": time_now,
         "source_ip": source_ip,
         "destination_ip": destination_ip,
         "protocol": protocol,
@@ -144,4 +146,3 @@ def start_capture():
 
 if __name__ == "__main__":
     start_capture()
-
