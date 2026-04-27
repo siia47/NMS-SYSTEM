@@ -43,7 +43,6 @@ def get_process_for_port(port):
         
     return PORT_PROCESS_CACHE.get(port, "Unknown")
 
-
 def process_packet(packet):
     time_now = datetime.now() 
     source_ip = "Unknown"
@@ -56,17 +55,14 @@ def process_packet(packet):
     sport = None
     process_name = "Unknown"
 
-    # 1. Check for ARP / RARP (These operate below the IP layer)
     if ARP in packet:
         source_ip = packet[ARP].psrc
         destination_ip = packet[ARP].pdst
-        
-        if packet[ARP].op in (1, 2):      # ARP Request/Reply
+        if packet[ARP].op in (1, 2):      
             protocol = "ARP"
-        elif packet[ARP].op in (3, 4):    # RARP Request/Reply
+        elif packet[ARP].op in (3, 4):    
             protocol = "RARP"
             
-    # 2. Check for IP layer protocols
     elif IP in packet:
         source_ip = packet[IP].src
         destination_ip = packet[IP].dst
@@ -74,8 +70,6 @@ def process_packet(packet):
         if TCP in packet:
             port = packet[TCP].dport
             sport = packet[TCP].sport
-            
-            # Identify HTTPS (Port 443) or DNS over TCP (Port 53)
             if port == 443 or sport == 443:
                 protocol = "HTTPS"
             elif port == 53 or sport == 53:
@@ -86,17 +80,13 @@ def process_packet(packet):
         elif UDP in packet:
             port = packet[UDP].dport
             sport = packet[UDP].sport
-            
-            # Identify DNS (Port 53) or mDNS (Port 5353)
             if port in (53, 5353) or sport in (53, 5353):
                 protocol = "DNS"
-            # Identify DHCP (Ports 67 and 68) 
             elif port in (67, 68) or sport in (67, 68):
                 protocol = "DHCP"
             else:
                 protocol = "UDP"
                 
-        # ICMP IS ALREADY IDENTIFIED HERE
         elif ICMP in packet:
             protocol = "ICMP"
             
@@ -119,18 +109,14 @@ def process_packet(packet):
         "length": length
     }
     
-    # Run intrusion detection
     detector.analyze_packet(packet_data)
     
     print(f"Captured: {protocol} from {source_ip} to {destination_ip} (Process: {process_name})") 
     save_packet(packet_data)
 
-
 def save_packet(packet_data):
     file_path = "data/packets.csv"
-    # Ensure the directory exists
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    
     df = pd.DataFrame([packet_data])
 
     if os.path.exists(file_path):
@@ -138,11 +124,9 @@ def save_packet(packet_data):
     else:
         df.to_csv(file_path, index=False)    
 
-
 def start_capture():
     print("Starting packet capture...")
     sniff(prn=process_packet, store=False)   
-
 
 if __name__ == "__main__":
     start_capture()

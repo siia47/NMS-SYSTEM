@@ -5,7 +5,6 @@ import os
 
 st.set_page_config(page_title="Network Analyzer Pro", layout="wide")
 
-# --- CUSTOM CSS TO HIDE DEPLOY & STOP BUTTONS ---
 st.markdown("""
     <style>
     /* Hides the deploy button */
